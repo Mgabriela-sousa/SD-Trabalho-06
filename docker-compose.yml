@@ -1,0 +1,37 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    networks:
+      - rede
+
+  gerador:
+    build: ./gerador
+    depends_on:
+      - rabbitmq
+    networks:
+      - rede
+
+  consumidor1:
+    build: ./consumidor1
+    depends_on:
+      - rabbitmq
+    networks:
+      - rede
+
+  consumidor2:
+    build: ./consumidor2
+    depends_on:
+      - rabbitmq
+    networks:
+      - rede
+
+networks:
+  rede:
+    driver: bridge
