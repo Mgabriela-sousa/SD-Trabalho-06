@@ -17,3 +17,19 @@ Após os containers estarem em execução, você pode acessar a interface de adm
 ```bash
 http://localhost:15672
 ```
+Quando uma mensagem é enviada a uma fila no RabbitMQ, ela pode estar em três estados principais:
+Campo	Significado
+Ready -	Mensagens que ainda não foram consumidas por nenhum consumidor.
+Unacked -	Mensagens que foram entregues ao consumidor, mas ainda não foram confirmadas (acknowledged).
+Total	Soma de Ready + Unacked. Representa o número total de mensagens na fila.
+![Imagem 1](imagem1.png)
+As mensagens foram entregues para os consumidores e estão sendo processadas nesse momento.
+Nenhuma mensagem está “em espera” na fila, porque:
+O consumidor conseguiu buscar rapidamente todas as mensagens disponíveis.
+Mas como ele é lento (ex: time.sleep(4)), o processamento ainda não terminou.
+Resultado: as mensagens estão na fase "desbloqueadas", ou seja, a fila entregou, mas o consumidor ainda não finalizou.
+![Imagem 2](imagem2.png)
+As mensagens se acumularam na fila e não foram buscadas ainda pelos consumidores.
+Isso acontece quando:
+O consumidor não está conseguindo acompanhar a produção.
+Ou acabou de ser (re)iniciado e ainda não consumiu nenhuma.
